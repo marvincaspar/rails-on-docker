@@ -1,0 +1,35 @@
+web:
+  image: nginx:latest
+  ports:
+    - "80:80"
+    - "443:443"
+  links:
+    - "rails"
+  volumes:
+    - ./log/nginx:/var/log/nginx
+    - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
+    - ./docker/nginx/sites-enabled:/etc/nginx/sites-enabled
+    - ./docker/nginx/ssl:/etc/nginx/ssl
+  volumes_from:
+    - rails
+
+rails:
+  build: .
+  command: bundle exec puma -C config/puma.rb
+  env_file:
+    - .env
+  volumes:
+    - ./:/var/www/html
+    - /tmp/shared
+  links:
+    - mysql
+    - redis
+
+mysql:
+  image: mysql:latest
+  environment:
+    MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+    MYSQL_DATABASE: rails_dev
+
+redis:
+  image: redis:latest
