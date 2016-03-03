@@ -14,7 +14,7 @@ RUN mkdir -p /var/www/html
 # Set working directory
 WORKDIR /var/www/html
 
-RUN gem install rails -v 5.0.0.beta1
+RUN gem install rails -v 5.0.0.beta3
 
 # set bundle path
 RUN bundle config path vendor/bundle
